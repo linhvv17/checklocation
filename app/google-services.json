@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "181170083241",
+    "firebase_url": "https://locationcheck-e8c4a.firebaseio.com",
+    "project_id": "locationcheck-e8c4a",
+    "storage_bucket": "locationcheck-e8c4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181170083241:android:bdf49bbd83c064659ee0b8",
+        "android_client_info": {
+          "package_name": "com.example.locationchecker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181170083241-sopb97h78entfiqd5pfqmemp2sj8gvij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7WKOOQfpaA15YBZou54V49r3Jux1CPxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181170083241-sopb97h78entfiqd5pfqmemp2sj8gvij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

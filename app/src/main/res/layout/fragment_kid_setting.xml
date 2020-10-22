@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.ParentSettingFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:src="@drawable/ic_launcher_background"
+            android:id="@+id/ava_kid"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginRight="120dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+        <EditText
+            android:textColor="@color/black"
+            android:background="@color/blue"
+            android:gravity="center_vertical"
+            android:text="Linh Khoanh"
+            android:textSize="24sp"
+            android:id="@+id/kid_name"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="50dp"
+            app:layout_constraintDimensionRatio="7:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ava_kid">
+
+        </EditText>
+        <EditText
+            android:textColor="@color/black"
+            android:background="@color/blue"
+            android:gravity="center_vertical"
+            android:text="0981838198"
+            android:textSize="24sp"
+            android:id="@+id/kid_phone"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="50dp"
+            app:layout_constraintDimensionRatio="7:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/kid_name">
+
+        </EditText>
+
+        <Button
+            android:id="@+id/btn_doi_info"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="110dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="110dp"
+            android:text="@string/text_thay_doi_thong_tin"
+            app:layout_constraintDimensionRatio="3:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/kid_phone">
+
+        </Button>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
