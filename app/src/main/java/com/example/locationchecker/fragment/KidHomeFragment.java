@@ -60,7 +60,7 @@ public class KidHomeFragment extends Fragment implements OnMapReadyCallback, Goo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_parent_home, container, false);
+        View view =  inflater.inflate(R.layout.fragment_kid_home, container, false);
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -109,7 +109,7 @@ public class KidHomeFragment extends Fragment implements OnMapReadyCallback, Goo
         googleMap.setBuildingsEnabled(true);
 
         // Lay du lieu tu firebase
-        kidReference = FirebaseDatabase.getInstance().getReference().child("Kids").child("332943");
+//        kidReference = FirebaseDatabase.getInstance().getReference().child("Kids").child("332943");
 //        getLocation();
 
 
@@ -119,20 +119,20 @@ public class KidHomeFragment extends Fragment implements OnMapReadyCallback, Goo
 //        LatLng sydney = new LatLng(-34, 151);
 
         // Lay du lieu tu firebase
-        kidReference = FirebaseDatabase.getInstance().getReference().child("Kids").child("532943");
+        kidReference = FirebaseDatabase.getInstance().getReference().child("Kids").child("565345");
         kidReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 Kid kid = snapshot.getValue(Kid.class);
                 // ...
-//                if (kid!= null){
-//                    Double lat = kid.getLat();
-//                    Double lng = kid.getLng();
-//                    sydney = new LatLng(lat, lng);
-//                    mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in My Location"));
+                if (kid!= null){
+                    String lat = kid.getLat();
+                    String lng = kid.getLng();
+                    sydney = new LatLng(Double.valueOf(lat), Double.valueOf(lng));
+//                    mMap.addMarker(new MarkerOptions().position(sydney).title("My Location"));
 //                    mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-//                }
+                }
             }
 
             @Override

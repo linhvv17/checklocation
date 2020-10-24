@@ -31,8 +31,8 @@
 
             </TextView>
 
-            <ImageView
-                android:src="@drawable/sos"
+            <Button
+                android:background="@drawable/sos"
                 android:scaleType="centerCrop"
                 android:layout_alignParentRight="true"
                 android:id="@+id/imgSOS"
@@ -40,7 +40,7 @@
                 android:layout_height="50dp"
                 >
 
-            </ImageView>
+            </Button>
 
         </RelativeLayout>
 

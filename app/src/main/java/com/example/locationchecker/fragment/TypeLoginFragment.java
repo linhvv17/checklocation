@@ -52,7 +52,7 @@ public class TypeLoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ft_add.add(R.id.frame_layout, new RegisterFragment());
-                ft_add.commit();
+//                ft_add.commit();
             }
 
         });

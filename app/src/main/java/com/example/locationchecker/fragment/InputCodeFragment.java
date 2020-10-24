@@ -1,7 +1,9 @@
 package com.example.locationchecker.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
@@ -33,6 +35,9 @@ import java.util.HashMap;
 
 
 public class InputCodeFragment extends Fragment {
+    protected LocationManager locationManager;
+    protected LocationListener locationListener;
+    protected String latitude,longitude;
     ArrayList<Parent> parents = new ArrayList<>();
     EditText edtName, edtCode;
     Button btnJoin;
@@ -80,6 +85,10 @@ public class InputCodeFragment extends Fragment {
                         Toast.makeText(getContext(), "Dang nhap thanh cong", Toast.LENGTH_LONG).show();
                         createKid(parents.get(i));
                         addKid();
+                        String code = edtCode.getText().toString();
+                        Intent intent = new Intent(getActivity().getBaseContext(), HomeKidsActivity.class);
+                        intent.putExtra("message", code);
+                        getActivity().startActivity(intent);
 //                        Intent intent = new Intent(getContext(), HomeKidsActivity.class);
 //                        intent.putExtra("code",edtCode.getText().toString());
 //                        startActivity(intent);
@@ -109,6 +118,9 @@ public class InputCodeFragment extends Fragment {
 //        kid.put("phone", "");
         refKids.updateChildren(kid);
     }
+
+
+
     private void addKid(){
         refKids = FirebaseDatabase.getInstance().getReference().child("Kids").child(edtCode.getText().toString());
         HashMap<String, Object> kid = new HashMap<>();
@@ -116,10 +128,12 @@ public class InputCodeFragment extends Fragment {
         kid.put("code", edtCode.getText().toString());
         kid.put("name", edtName.getText().toString());
         kid.put("phone", "");
-        kid.put("lat", "-34");//LatLng(-34, 151)
-        kid.put("lng", "151");
+        kid.put("lat", "20.980152");//LatLng(-34, 151)
+        kid.put("lng", "105.795669");
+        kid.put("sos", "false");
         refKids.updateChildren(kid);
     }
+    @SuppressLint("MissingPermission")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -130,16 +144,19 @@ public class InputCodeFragment extends Fragment {
         android_id = Settings.Secure.getString(getContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         userReference = FirebaseDatabase.getInstance().getReference().child("parents");
+
+
+
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //if (edtCode.getText().toString().equals("123456")){
 //                createKid();
                 checkCode();
-                String code = edtCode.getText().toString();
-                Intent intent = new Intent(getActivity().getBaseContext(), HomeKidsActivity.class);
-                intent.putExtra("message", code);
-                getActivity().startActivity(intent);
+//                String code = edtCode.getText().toString();
+//                Intent intent = new Intent(getActivity().getBaseContext(), HomeKidsActivity.class);
+//                intent.putExtra("message", code);
+//                getActivity().startActivity(intent);
 //                addKid();
 //                Intent intent = new Intent(getContext(), HomeKidsActivity.class);
 //                startActivity(intent);

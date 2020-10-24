@@ -1,14 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.ParentCallFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+        <EditText
+            android:layout_centerVertical="true"
+            android:id="@+id/edt_number_phone"
+            android:layout_centerHorizontal="true"
+            android:hint="Nhap so dien thoai ..."
+            android:gravity="center"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content">
+
+        </EditText>
+
+        <Button
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/edt_number_phone"
+            android:id="@+id/btn_call"
+            android:text="Call"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content">
+
+        </Button>
+
+        <Button
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/btn_call"
+            android:id="@+id/btn_quick_call"
+            android:text="Quick Call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </Button>
+    </RelativeLayout>
 
 </FrameLayout>

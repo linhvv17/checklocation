@@ -7,12 +7,19 @@ public class Kid {
     private String phone;
     private String lat;
     private String lng;
+    private String sos;
+
     public Kid(){
 
     }
 
+    public String getSos() {
+        return sos;
+    }
 
-
+    public void setSos(String sos) {
+        this.sos = sos;
+    }
     public String getId() {
         return id;
     }
@@ -61,19 +68,14 @@ public class Kid {
         this.lng = lng;
     }
 
-    public Kid(String id, String code, String name, String phone, String lat, String lng) {
+    public Kid(String id, String code, String name, String phone, String lat, String lng, String sos) {
         this.id = id;
         this.code = code;
         this.name = name;
         this.phone = phone;
         this.lat = lat;
         this.lng = lng;
+        this.sos = sos;
     }
 
-    public Kid(String id, String code, String name, String phone) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.phone = phone;
-    }
 }

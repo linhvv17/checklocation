@@ -28,7 +28,7 @@
         <EditText
             android:textColor="@color/black"
             android:background="@drawable/rounded_edittext"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:text="Linh Khoanh"
             android:textSize="24sp"
             android:id="@+id/edtname"
@@ -46,7 +46,7 @@
         <EditText
             android:textColor="@color/black"
             android:background="@drawable/rounded_edittext"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:text="0981838198"
             android:textSize="24sp"
             android:id="@+id/edtphone"

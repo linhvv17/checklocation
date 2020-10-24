@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.locationchecker.R;
+import com.example.locationchecker.SOSActivity;
 import com.example.locationchecker.fragment.KidCallFragment;
 import com.example.locationchecker.fragment.KidHomeFragment;
 import com.example.locationchecker.fragment.KidMessageFragment;
@@ -39,7 +40,7 @@ public class HomeKidsActivity extends AppCompatActivity implements View.OnClickL
 
     private static final String YOUR_FRAGMENT_STRING_TAG = "ABCD";
     private TextView tvName;
-    private Button btnAdd;
+    private Button btnSOS;
 
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference refUser;
@@ -60,6 +61,7 @@ public class HomeKidsActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_kids);
+        initView();
         Intent intent = getIntent();
         String message = intent.getStringExtra("message");
         Log.d("MESSAGE",message);
@@ -83,8 +85,8 @@ public class HomeKidsActivity extends AppCompatActivity implements View.OnClickL
 
         android_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-        userReference = FirebaseDatabase.getInstance().getReference().child("parents").child(android_id);
+//        mUser = FirebaseAuth.getInstance().getCurrentUser();
+//        userReference = FirebaseDatabase.getInstance().getReference().child("parents").child(android_id);
 
         ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -102,7 +104,7 @@ public class HomeKidsActivity extends AppCompatActivity implements View.OnClickL
                 // ...
             }
         };
-        userReference.addValueEventListener(postListener);
+//        userReference.addValueEventListener(postListener);
 
 //        btnAdd.setOnClickListener(this);
 
@@ -116,11 +118,19 @@ public class HomeKidsActivity extends AppCompatActivity implements View.OnClickL
         //
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        btnSOS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(HomeKidsActivity.this, SOSActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void initView() {
-        tvName = findViewById(R.id.tvName);
-        btnAdd = findViewById(R.id.btnAdd);
+//        tvName = findViewById(R.id.tvName);
+        btnSOS = findViewById(R.id.imgSOS);
     }
 
 
@@ -161,14 +171,14 @@ public class HomeKidsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-//        switch (v.getId()){
-//            case R.id.btnAdd:
+        switch (v.getId()){
+            case R.id.imgSOS:
 //                Toast.makeText(this, "Add User", Toast.LENGTH_LONG).show();
-//                Intent intent = new Intent(this, RenderCodeActivity.class);
-//                startActivity(intent);
-//                break;
-//            default:
-//                break;
-//        }
+                Intent intent = new Intent(this, SOSActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
     }
 }

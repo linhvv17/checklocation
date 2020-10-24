@@ -7,14 +7,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.locationchecker.ExampleDialog;
 import com.example.locationchecker.R;
 import com.example.locationchecker.fragment.ParentCallFragment;
 import com.example.locationchecker.fragment.ParentHomeFragment;
@@ -22,6 +25,7 @@ import com.example.locationchecker.fragment.ParentMessageFragment;
 import com.example.locationchecker.fragment.ParentSettingFragment;
 import com.example.locationchecker.fragment.RenderCodeAddKidFragment;
 import com.example.locationchecker.fragment.TypeLoginFragment;
+import com.example.locationchecker.model.Kid;
 import com.example.locationchecker.model.Parent;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -40,6 +44,7 @@ public class HomeParentsActivity extends AppCompatActivity implements View.OnCli
     private TextView tvName;
     private Button btnAdd;
 
+    private FirebaseDatabase database;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference refUser;
     private FirebaseUser mUser;
@@ -53,6 +58,7 @@ public class HomeParentsActivity extends AppCompatActivity implements View.OnCli
     Fragment active = fragment1;
     private String android_id;
     private DatabaseReference userReference;
+
 
 
     @Override
@@ -96,9 +102,16 @@ public class HomeParentsActivity extends AppCompatActivity implements View.OnCli
         fm.beginTransaction().add(R.id.frame_container,fragment1, "1").commit();
 
 
+
+
         //
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    public void openDialog() {
+        ExampleDialog exampleDialog = new ExampleDialog();
+        exampleDialog.show(getSupportFragmentManager(), "example dialog");
     }
 
     private void initView() {
