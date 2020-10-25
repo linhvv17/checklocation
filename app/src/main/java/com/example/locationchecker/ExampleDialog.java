@@ -17,6 +17,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class ExampleDialog extends AppCompatDialogFragment {
+    public String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference checkReference;
     DatabaseReference ref = database.getReference();
@@ -30,7 +40,7 @@ public class ExampleDialog extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        checkReference =  ref.child("Kids").child("565345");
+                        checkReference =  ref.child("Kids").child(code);
 
                         checkReference.child("sos").setValue("false");
 

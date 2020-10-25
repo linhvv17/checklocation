@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.locationchecker.R;
 import com.example.locationchecker.SOSActivity;
+import com.example.locationchecker.Service;
 import com.example.locationchecker.fragment.KidCallFragment;
 import com.example.locationchecker.fragment.KidHomeFragment;
 import com.example.locationchecker.fragment.KidMessageFragment;
@@ -25,6 +26,7 @@ import com.example.locationchecker.fragment.ParentCallFragment;
 import com.example.locationchecker.fragment.ParentHomeFragment;
 import com.example.locationchecker.fragment.ParentMessageFragment;
 import com.example.locationchecker.fragment.ParentSettingFragment;
+import com.example.locationchecker.model.Kid;
 import com.example.locationchecker.model.Parent;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -65,46 +67,35 @@ public class HomeKidsActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = getIntent();
         String message = intent.getStringExtra("message");
         Log.d("MESSAGE",message);
-//        //
-//        Intent intent = getIntent();
-////        String code = intent.getStringExtra("code");
-////        Log.d("CODE:",""+code);
-//        //
-//        Bundle bundle = new Bundle();
-//        bundle.putString("done","abcd");
-//// set Fragmentclass Arguments
-//        KidSettingFragment frg = new KidSettingFragment();
-//        frg.setArguments(bundle);
-//        //        initView();
 
-//        Bundle bundle = new Bundle();
-//        bundle.putString("message", message);
-////set Fragmentclass Arguments
-//        KidSettingFragment ksm = new KidSettingFragment();
-//        ksm.setArguments(bundle);
 
         android_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-//        mUser = FirebaseAuth.getInstance().getCurrentUser();
-//        userReference = FirebaseDatabase.getInstance().getReference().child("parents").child(android_id);
+
+        DatabaseReference kidReference = FirebaseDatabase.getInstance().getReference().child("Kids").child(message);
+
 
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                Parent parent = dataSnapshot.getValue(Parent.class);
+                Kid kid = dataSnapshot.getValue(Kid.class);
                 // ...
-//                tvName.setText(parent.getName());
+                if (kid!=null){
+//                    tvName.setText(parent.getName());
+                    String codeKid = kid.getCode();
+                    Intent mIntent = new Intent(getApplicationContext(), Service.class);
+                    Bundle mBundle = new Bundle();
+                    mBundle.putString("kidto", codeKid);
+                    mIntent.putExtras(mBundle);
+                    startService(mIntent);
+                }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
             }
         };
-//        userReference.addValueEventListener(postListener);
+        kidReference.addValueEventListener(postListener);
 
 //        btnAdd.setOnClickListener(this);
 
@@ -123,6 +114,7 @@ public class HomeKidsActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(HomeKidsActivity.this, SOSActivity.class);
+                i.putExtra("key","146194");
                 startActivity(i);
             }
         });

@@ -1,6 +1,7 @@
 package com.example.locationchecker.fragment;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 
 import com.example.locationchecker.ExampleDialog;
 import com.example.locationchecker.R;
+import com.example.locationchecker.Service;
 import com.example.locationchecker.model.Kid;
 import com.example.locationchecker.model.Parent;
 import com.example.locationchecker.model.model.MapDTO;
@@ -82,6 +84,9 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        userReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
+
     }
 
     @Override
@@ -89,6 +94,10 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_parent_home, container, false);
+
+
+
+
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -96,10 +105,10 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
 
 //        mapDTOS = new ArrayList<>();
 
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-        userReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
+//        mUser = FirebaseAuth.getInstance().getCurrentUser();
+//        userReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
 
-        userReference.child("code");
+//        userReference.child("code");
 
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -108,36 +117,41 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
                 // ...
                 if (parent!=null){
                     text = parent.getCode();
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                    checkReference =  ref.child("Kids").child(text);
 
-            }
-        });
+                    checkReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            // Get Post object and use the values to update the UI
+                            Kid kid = snapshot.getValue(Kid.class);
+                            // ...
+                            if (kid != null) {
+                                Boolean check = Boolean.valueOf(kid.getSos());
+                                Log.d("check", String.valueOf(check));
 
-        checkReference =  ref.child("Kids").child(text);
-
-        checkReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Get Post object and use the values to update the UI
-                Kid kid = snapshot.getValue(Kid.class);
-                // ...
-                if (kid != null) {
-                    Boolean check = Boolean.valueOf(kid.getSos());
-                    Log.d("check", String.valueOf(check));
-
-                    if (check.equals(true)) {
+                                if (check.equals(true)) {
 //                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-                        openDialog();
-                    } else {
+//                                    openDialog();
 
-                        return;
-                    }
+//                                    ExampleDialog exampleDialog = new ExampleDialog();
+//                                    exampleDialog.setCode(text);
+//                                    exampleDialog.show(getFragmentManager(), "example dialog");
+
+                                } else {
+
+                                    return;
+                                }
 
 
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
 
@@ -146,10 +160,41 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
 
             }
         });
+
+//        checkReference =  ref.child("Kids").child(text);
+//
+//        checkReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                // Get Post object and use the values to update the UI
+//                Kid kid = snapshot.getValue(Kid.class);
+//                // ...
+//                if (kid != null) {
+//                    Boolean check = Boolean.valueOf(kid.getSos());
+//                    Log.d("check", String.valueOf(check));
+//
+//                    if (check.equals(true)) {
+////                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
+//                        openDialog();
+//                    } else {
+//
+//                        return;
+//                    }
+//
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
         return view;
     }
 
-        public void openDialog() {
+
+    public void openDialog() {
             ExampleDialog exampleDialog = new ExampleDialog();
             exampleDialog.show(getFragmentManager(), "example dialog");
         }
@@ -181,7 +226,7 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
     public void onMapReady(GoogleMap googleMap) {
         mapDTOS = new ArrayList<>();
 
-        mapsReference = FirebaseDatabase.getInstance().getReference("Maps");
+        mapsReference = FirebaseDatabase.getInstance().getReference("KidMaps").child(text);
         MapsInitializer.initialize(getContext());
         this.mMap = googleMap;
         //bat la ban
@@ -243,7 +288,7 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
                 }
 //
                 // Add a marker in Sydney and move the camera
-//                if (!mapDTOS.isEmpty()){
+                if (mapDTOS!=null){
                 LatLng start = new LatLng(mapDTOS.get(0).getLatitude(), mapDTOS.get(0).getLongitude());
                 LatLng end = new LatLng(mapDTOS.get(mapDTOS.size()-1).getLatitude(), mapDTOS.get(mapDTOS.size()-1).getLongitude());
 
@@ -268,7 +313,7 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
 //
                     mMap.addMarker(new MarkerOptions().position(start).title("Điểm bắt đầu!"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(end,18));
-//                }
+                }
 //                LatLng start = new LatLng(mapDTOS.get(0).getLatitude(), mapDTOS.get(0).getLongitude());
 //                LatLng end = new LatLng(mapDTOS.get(mapDTOS.size()-1).getLatitude(), mapDTOS.get(mapDTOS.size()-1).getLongitude());
                 //tao 1 marker

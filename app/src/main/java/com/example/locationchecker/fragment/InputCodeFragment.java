@@ -35,6 +35,7 @@ import java.util.HashMap;
 
 
 public class InputCodeFragment extends Fragment {
+
     protected LocationManager locationManager;
     protected LocationListener locationListener;
     protected String latitude,longitude;
@@ -70,6 +71,8 @@ public class InputCodeFragment extends Fragment {
 
     }
     private void checkCode(){
+        android_id = Settings.Secure.getString(getContext().getContentResolver(),
+                Settings.Secure.ANDROID_ID);
         DatabaseReference refUsers = FirebaseDatabase.getInstance().getReference().child("Users");
         refUsers.addValueEventListener(new ValueEventListener() {
             @Override
@@ -109,9 +112,10 @@ public class InputCodeFragment extends Fragment {
 
 
     private void createKid(Parent parent) {
+
         refKids = FirebaseDatabase.getInstance().getReference().child("Users").child(parent.getId()).child("Members").child(edtCode.getText().toString());
         HashMap<String, Object> kid = new HashMap<>();
-        kid.put("id", edtCode.getText().toString());
+        kid.put("id", android_id);
         kid.put("type", "kid");
 //        kid.put("code", edtCode.getText().toString());
 //        kid.put("name", edtName.getText().toString());
@@ -124,7 +128,7 @@ public class InputCodeFragment extends Fragment {
     private void addKid(){
         refKids = FirebaseDatabase.getInstance().getReference().child("Kids").child(edtCode.getText().toString());
         HashMap<String, Object> kid = new HashMap<>();
-        kid.put("id", edtCode.getText().toString());
+        kid.put("id", android_id);
         kid.put("code", edtCode.getText().toString());
         kid.put("name", edtName.getText().toString());
         kid.put("phone", "");

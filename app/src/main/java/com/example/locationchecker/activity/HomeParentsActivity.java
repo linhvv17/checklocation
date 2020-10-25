@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.locationchecker.ExampleDialog;
 import com.example.locationchecker.R;
+import com.example.locationchecker.Service;
 import com.example.locationchecker.fragment.ParentCallFragment;
 import com.example.locationchecker.fragment.ParentHomeFragment;
 import com.example.locationchecker.fragment.ParentMessageFragment;
@@ -58,6 +59,7 @@ public class HomeParentsActivity extends AppCompatActivity implements View.OnCli
     Fragment active = fragment1;
     private String android_id;
     private DatabaseReference userReference;
+    String codeKid;
 
 
 
@@ -72,34 +74,35 @@ public class HomeParentsActivity extends AppCompatActivity implements View.OnCli
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         userReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
 
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                Parent parent = dataSnapshot.getValue(Parent.class);
-                // ...
-                if (parent!=null){
-                    tvName.setText(parent.getName());
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        };
-        userReference.addValueEventListener(postListener);
+//        ValueEventListener postListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // Get Post object and use the values to update the UI
+//                Parent parent = dataSnapshot.getValue(Parent.class);
+//                // ...
+//                if (parent!=null){
+//                    tvName.setText(parent.getName());
+//                    codeKid = parent.getCode();
+//                    Intent mIntent = new Intent(getApplicationContext(), Service.class);
+//                    Bundle mBundle = new Bundle();
+//                    mBundle.putString("to", codeKid);
+//                    mIntent.putExtras(mBundle);
+//                    startService(mIntent);
+//                }
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        };
+//        userReference.addValueEventListener(postListener);
 
         btnAdd.setOnClickListener(this);
 
 
-        fm.beginTransaction().add(R.id.frame_container, fragment4, "3").hide(fragment4).commit();
-        fm.beginTransaction().add(R.id.frame_container, fragment3, "3").hide(fragment3).commit();
-        fm.beginTransaction().add(R.id.frame_container, fragment2, "2").hide(fragment2).commit();
-        fm.beginTransaction().add(R.id.frame_container,fragment1, "1").commit();
+        fm.beginTransaction().add(R.id.frame_container, fragment4, "3").hide(fragment4).commitAllowingStateLoss();
+        fm.beginTransaction().add(R.id.frame_container, fragment3, "3").hide(fragment3).commitAllowingStateLoss();
+        fm.beginTransaction().add(R.id.frame_container, fragment2, "2").hide(fragment2).commitAllowingStateLoss();
+        fm.beginTransaction().add(R.id.frame_container,fragment1, "1").commitAllowingStateLoss();
 
 
 
@@ -134,6 +137,11 @@ public class HomeParentsActivity extends AppCompatActivity implements View.OnCli
                 case R.id.navigation_mess:
                     fm.beginTransaction().hide(active).show(fragment2).commit();
                     active = fragment2;
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("params","146194");
+//                    ParentMessageFragment fragobj = new ParentMessageFragment();
+//                    fragobj.setArguments(bundle);
+
                     return true;
 
                 case R.id.navigation_call:

@@ -1,5 +1,6 @@
 package com.example.locationchecker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,15 +21,20 @@ public class SOSActivity extends AppCompatActivity {
     Button stop;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference().child("Kids").child("565345");
+    DatabaseReference ref;
 
 //    DatabaseReference check = database.getReference("Check");
+    String key;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_s_o_s);
+
+        Intent intent = getIntent();
+        key = intent.getStringExtra("key");
+        ref = database.getReference().child("Kids").child(key);
 
         button = (Button)findViewById(R.id.SOS);
 
