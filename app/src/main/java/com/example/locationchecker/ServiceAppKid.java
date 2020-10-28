@@ -9,6 +9,7 @@ import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.example.locationchecker.utilities.Notification;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,20 +37,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ServiceKid extends android.app.Service {
+public class Service extends android.app.Service {
 
 //    private String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(),
 //            Settings.Secure.ANDROID_ID);
     protected static final int CHANNEL_ID = 1337;
     protected static final int NOTIFICATION_ID = 1337;
     private static String TAG = "Service";
-    private static ServiceKid mCurrentService;
+    private static Service mCurrentService;
     private int counter = 0;
 
     protected LocationManager locationManager;
     private String sang;
 
-    public ServiceKid() {
+    public Service() {
         super();
     }
 
@@ -77,50 +79,50 @@ public class ServiceKid extends android.app.Service {
         Log.d(TAG, "restarting Service !!");
         counter = 0;
 
-        sang = intent.getStringExtra("to");
+        sang = intent.getStringExtra("kidto");
         Log.d("SANG",sang);
-        ref = database.getReference().child("Maps");
+        ref = database.getReference().child("KidMaps").child(sang);
 
 
-        //con sua cho nay
-        check = database.getReference().child("Kids").child(sang);
-
-        check.addValueEventListener(new ValueEventListener() {
-            MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Get Post object and use the values to update the UI
-                Kid kid = snapshot.getValue(Kid.class);
-                // ...
-                if (kid!= null){
-                    Boolean  check = Boolean.valueOf(kid.getSos());
-                    Log.d("check", String.valueOf(check));
-                    if (check.equals(true)){
-                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-                        mediaPlayer.start();
-                    } else {
-                        if (mediaPlayer.isPlaying()){
-                            mediaPlayer.pause();
-//                            mediaPlayer.release();
-                        } else {
-                            return;
-                        }
+//        //con sua cho nay
+//        check = database.getReference().child("Kids").child("146194");
+//
+//        check.addValueEventListener(new ValueEventListener() {
+//            MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                // Get Post object and use the values to update the UI
+//                Kid kid = snapshot.getValue(Kid.class);
+//                // ...
+//                if (kid!= null){
+//                    Boolean  check = Boolean.valueOf(kid.getSos());
+//                    Log.d("check", String.valueOf(check));
+//                    if (check.equals(true)){
 //                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-                        //mediaPlayer.pause();
-
-//                        mediaPlayer.release();
-//                        mediaPlayer.
-                    }
-
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+//                        mediaPlayer.start();
+//                    } else {
+//                        if (mediaPlayer.isPlaying()){
+//                            mediaPlayer.pause();
+////                            mediaPlayer.release();
+//                        } else {
+//                            return;
+//                        }
+////                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
+//                        //mediaPlayer.pause();
+//
+////                        mediaPlayer.release();
+////                        mediaPlayer.
+//                    }
+//
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
@@ -225,8 +227,8 @@ public class ServiceKid extends android.app.Service {
         scheduler.scheduleAtFixedRate
                 (new Runnable() {
                     public void run() {
-                        client = LocationServices.getFusedLocationProviderClient(ServiceKid.getmCurrentService());
-                        if (ActivityCompat.checkSelfPermission(ServiceKid.getmCurrentService(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ServiceKid.getmCurrentService(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        client = LocationServices.getFusedLocationProviderClient(Service.getmCurrentService());
+                        if (ActivityCompat.checkSelfPermission(Service.getmCurrentService(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Service.getmCurrentService(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             // TODO: Consider calling
                             //    ActivityCompat#requestPermissions
                             // here to request the missing permissions, and then overriding
@@ -244,7 +246,7 @@ public class ServiceKid extends android.app.Service {
 //                                    Log.i("Starting Location!", );
                                     Location location = (Location) o;
                                     Date currentTime = Calendar.getInstance().getTime();
-                                    ref.child(String.valueOf(currentTime)).setValue(new MapDTO(location.getLatitude(), location.getLongitude()));
+//                                    ref.child(String.valueOf(currentTime)).setValue(new MapDTO(location.getLatitude(), location.getLongitude()));
                                     Log.i("Starting Location getLatitude!", String.valueOf(location.getLatitude()));
                                     Log.i("Starting Location getLongitude!", String.valueOf(location.getLongitude()));
                                 }
@@ -256,42 +258,43 @@ public class ServiceKid extends android.app.Service {
 
 
         //receive notification
-//        check.addValueEventListener(new ValueEventListener() {
-//            MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                // Get Post object and use the values to update the UI
-//                Kid kid = snapshot.getValue(Kid.class);
-//                // ...
-//                if (kid!= null){
-//                    Boolean  check = Boolean.valueOf(kid.getSos());
-//                    Log.d("check", String.valueOf(check));
-//                    if (check.equals(true)){
+        check = database.getReference().child("Kids").child("146194");
+        check.addValueEventListener(new ValueEventListener() {
+            MediaPlayer mediaPlayer ;//= MediaPlayer.create(getApplicationContext(), R.raw.sos);
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get Post object and use the values to update the UI
+                Kid kid = snapshot.getValue(Kid.class);
+                // ...
+                if (kid!= null){
+                    Boolean  check = Boolean.valueOf(kid.getSos());
+                    Log.d("check", String.valueOf(check));
+                    if (check.equals(true)){
+                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
+                        mediaPlayer.start();
+                    } else {
+                        if (mediaPlayer.isPlaying()){
+                            mediaPlayer.pause();
+//                            mediaPlayer.release();
+                        } else {
+                            return;
+                        }
 //                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-//                        mediaPlayer.start();
-//                    } else {
-//                        if (mediaPlayer.isPlaying()){
-//                            mediaPlayer.pause();
-////                            mediaPlayer.release();
-//                        } else {
-//                            return;
-//                        }
-////                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-//                        //mediaPlayer.pause();
-//
-////                        mediaPlayer.release();
-////                        mediaPlayer.
-//                    }
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
+                        //mediaPlayer.pause();
+
+//                        mediaPlayer.release();
+//                        mediaPlayer.
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
 //        check.addChildEventListener(new ChildEventListener() {
@@ -379,12 +382,12 @@ public class ServiceKid extends android.app.Service {
         }
     }
 
-    public static ServiceKid getmCurrentService() {
+    public static Service getmCurrentService() {
         return mCurrentService;
     }
 
-    public static void setmCurrentService(ServiceKid mCurrentService) {
-        ServiceKid.mCurrentService = mCurrentService;
+    public static void setmCurrentService(Service mCurrentService) {
+        Service.mCurrentService = mCurrentService;
     }
 
 }
