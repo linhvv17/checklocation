@@ -41,8 +41,6 @@ public class ParentAdapter extends
         return viewHolder;
     }
 
-
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 

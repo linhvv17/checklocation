@@ -71,6 +71,8 @@ public class ChatsActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         messageSenderID = auth.getCurrentUser().getUid();
+        messageReceiverID = getIntent().getStringExtra("userid");
+        Log.d("ID", messageReceiverID);
         reference = FirebaseDatabase.getInstance().getReference();
 
         chatName = findViewById(R.id.tv_name_chat);
@@ -79,6 +81,8 @@ public class ChatsActivity extends AppCompatActivity {
         edtMessage = findViewById(R.id.edt_message);
         imgMessage = findViewById(R.id.img_send);
         rvChatsLayout = findViewById(R.id.rv_chat_layout);
+
+        retrieveMessage(messageSenderID,messageReceiverID);
 //        imgCallVdieo = findViewById(R.id.btn_video_call);
 //        imgFile = findViewById(R.id.img_file);
 //        imgMedia = findViewById(R.id.btn_media);
@@ -108,13 +112,22 @@ public class ChatsActivity extends AppCompatActivity {
 //            }
 //        });
 
-        messageReceiverID = getIntent().getExtras().get("userid").toString();
-        reference.child("Kids").child(messageReceiverID).addValueEventListener(new ValueEventListener() {
+
+
+
+        reference.child("Kids").child(messageReceiverID.toString()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Kid user = snapshot.getValue(Kid.class);
-                chatName.setText(user.getName());
-                Picasso.get().load(R.drawable.profile_image).placeholder(R.drawable.profile_image).into(ciChats);
+
+                if (user!=null){
+
+                    chatName.setText(user.getName());
+
+                    Picasso.get().load(R.drawable.profile_image).placeholder(R.drawable.profile_image).into(ciChats);
+
+                }
+
 //                if (snapshot.hasChild("imageURL")) {
 //                    String receiverImage = snapshot.child("imageURL").getValue().toString();
 //                    Picasso.get().load(receiverImage).placeholder(R.drawable.profile_image).into(ciChats);
@@ -149,7 +162,7 @@ public class ChatsActivity extends AppCompatActivity {
                 sendMessager();
             }
         });
-        retrieveMessage(messageSenderID,messageReceiverID, messageReceiverID);
+
 
 
 
@@ -162,7 +175,7 @@ public class ChatsActivity extends AppCompatActivity {
 
             DatabaseReference ref  = FirebaseDatabase.getInstance().getReference();
             String messageKey = reference.push().getKey();
-            DatabaseReference refMes = ref.child("Message").child(messageReceiverID).child(messageKey);
+            DatabaseReference refMes = ref.child("Message").child(messageKey);
             HashMap<String, Object> mes = new HashMap<>();
             mes.put("sender", messageSenderID);
             mes.put("receiver", messageReceiverID);
@@ -173,8 +186,8 @@ public class ChatsActivity extends AppCompatActivity {
         }
     }
 
-    private void retrieveMessage(final String senderId, final String receiverId, String code) {
-        reference = FirebaseDatabase.getInstance().getReference().child("Message").child(code);
+    private void retrieveMessage(final String senderId, final String receiverId) {
+        reference = FirebaseDatabase.getInstance().getReference().child("Message");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

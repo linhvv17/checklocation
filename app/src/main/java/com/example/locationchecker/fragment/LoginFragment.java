@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -33,11 +35,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.lang.ref.Reference;
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
 
 import static android.content.Context.MODE_PRIVATE;
 
 
 public class LoginFragment extends Fragment {
+
+    public Executor executors;
+    public BiometricPrompt biometricPrompt;
+    public BiometricPrompt.PromptInfo promptInfo;
+    private  Button btn;
 
     DatabaseReference myRef;
     private FirebaseAuth mAuth;
@@ -108,6 +116,55 @@ public class LoginFragment extends Fragment {
 
             }
         });
+
+        btn = (Button)view.findViewById(R.id.btnLogin);
+
+
+        //Biometric
+
+
+        executors = ContextCompat.getMainExecutor(getContext());
+
+        biometricPrompt = new BiometricPrompt(getActivity(), (Executor) executors, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+//                txt.setText("Loi "+ errString);
+                Toast.makeText(getActivity(),errString,Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                Toast.makeText(getActivity(),"Dăng nhập thành công!",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getActivity(), HomeParentsActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(getActivity(),"Đăng nhập thất bại!",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Đăng nhập!")
+                .setSubtitle("Sử dụng vân tay để đăng nhập!")
+                // Can't call setNegativeButtonText() and
+                // setAllowedAuthenticators(...|DEVICE_CREDENTIAL) at the same time.
+                .setNegativeButtonText("Sử dụng mật khẩu!")
+//                .setAllowedAuthenticators(BIOMETRIC_STRONG | DEVICE_CREDENTIAL)
+                .build();
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                biometricPrompt.authenticate(promptInfo);
+            }
+        });
+
+
 
         return view;
     }

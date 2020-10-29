@@ -4,13 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -19,17 +16,13 @@ import android.widget.Toast;
 
 import com.example.locationchecker.ExampleDialog;
 import com.example.locationchecker.R;
-import com.example.locationchecker.Service;
+import com.example.locationchecker.ServiceAppParent;
 import com.example.locationchecker.fragment.ParentCallFragment;
 import com.example.locationchecker.fragment.ParentHomeFragment;
 import com.example.locationchecker.fragment.ParentMessageFragment;
 import com.example.locationchecker.fragment.ParentSettingFragment;
-import com.example.locationchecker.fragment.RenderCodeAddKidFragment;
-import com.example.locationchecker.fragment.TypeLoginFragment;
-import com.example.locationchecker.model.Kid;
 import com.example.locationchecker.model.Parent;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -68,33 +61,33 @@ public class HomeParentsActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
-        android_id = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+//        android_id = Settings.Secure.getString(this.getContentResolver(),
+//                Settings.Secure.ANDROID_ID);
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         userReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
 
-//        ValueEventListener postListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // Get Post object and use the values to update the UI
-//                Parent parent = dataSnapshot.getValue(Parent.class);
-//                // ...
-//                if (parent!=null){
-//                    tvName.setText(parent.getName());
-//                    codeKid = parent.getCode();
-//                    Intent mIntent = new Intent(getApplicationContext(), Service.class);
-//                    Bundle mBundle = new Bundle();
-//                    mBundle.putString("to", codeKid);
-//                    mIntent.putExtras(mBundle);
-//                    startService(mIntent);
-//                }
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//            }
-//        };
-//        userReference.addValueEventListener(postListener);
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                Parent parent = dataSnapshot.getValue(Parent.class);
+                // ...
+                if (parent!=null){
+                    tvName.setText(parent.getName());
+                    codeKid = parent.getCode();
+                    Intent mIntent = new Intent(getApplicationContext(), ServiceAppParent.class);
+                    Bundle mBundle = new Bundle();
+                    mBundle.putString("to", codeKid);
+                    mIntent.putExtras(mBundle);
+                    startService(mIntent);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+        userReference.addValueEventListener(postListener);
 
         btnAdd.setOnClickListener(this);
 

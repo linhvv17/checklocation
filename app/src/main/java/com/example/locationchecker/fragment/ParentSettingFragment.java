@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.locationchecker.R;
 import com.example.locationchecker.model.Parent;
@@ -68,6 +69,7 @@ public class ParentSettingFragment extends Fragment {
                 parent.put("name",edtName.getText().toString()) ;
                 parent.put("phone",edtPhone.getText().toString());
                 userReference.updateChildren(parent);
+                Toast.makeText(getContext(),"Thay doi thanh cpng!", Toast.LENGTH_LONG).show();
             }
         });
 

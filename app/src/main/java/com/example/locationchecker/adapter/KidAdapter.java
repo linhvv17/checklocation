@@ -52,7 +52,7 @@ public class KidAdapter extends
             @Override
             public void onClick(View v) {
                 Intent chatIntent = new Intent(mContext, ChatsActivity.class);
-                chatIntent.putExtra("userid", kidMessage.getCode());
+                chatIntent.putExtra("userid", kidMessage.getCode().toString());
                 mContext.startActivity(chatIntent);
             }
         });

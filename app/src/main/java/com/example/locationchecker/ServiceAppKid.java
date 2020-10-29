@@ -9,7 +9,6 @@ import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -22,7 +21,6 @@ import com.example.locationchecker.utilities.Notification;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,20 +35,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Service extends android.app.Service {
+public class ServiceAppKid extends android.app.Service {
 
 //    private String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(),
 //            Settings.Secure.ANDROID_ID);
     protected static final int CHANNEL_ID = 1337;
     protected static final int NOTIFICATION_ID = 1337;
     private static String TAG = "Service";
-    private static Service mCurrentService;
+    private static ServiceAppKid mCurrentServiceAppKid;
     private int counter = 0;
 
     protected LocationManager locationManager;
     private String sang;
 
-    public Service() {
+    public ServiceAppKid() {
         super();
     }
 
@@ -69,7 +67,7 @@ public class Service extends android.app.Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             restartForeground();
         }
-        mCurrentService = this;
+        mCurrentServiceAppKid = this;
 
     }
 
@@ -78,51 +76,9 @@ public class Service extends android.app.Service {
         super.onStartCommand(intent, flags, startId);
         Log.d(TAG, "restarting Service !!");
         counter = 0;
-
         sang = intent.getStringExtra("kidto");
         Log.d("SANG",sang);
         ref = database.getReference().child("KidMaps").child(sang);
-
-
-//        //con sua cho nay
-//        check = database.getReference().child("Kids").child("146194");
-//
-//        check.addValueEventListener(new ValueEventListener() {
-//            MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                // Get Post object and use the values to update the UI
-//                Kid kid = snapshot.getValue(Kid.class);
-//                // ...
-//                if (kid!= null){
-//                    Boolean  check = Boolean.valueOf(kid.getSos());
-//                    Log.d("check", String.valueOf(check));
-//                    if (check.equals(true)){
-//                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-//                        mediaPlayer.start();
-//                    } else {
-//                        if (mediaPlayer.isPlaying()){
-//                            mediaPlayer.pause();
-////                            mediaPlayer.release();
-//                        } else {
-//                            return;
-//                        }
-////                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-//                        //mediaPlayer.pause();
-//
-////                        mediaPlayer.release();
-////                        mediaPlayer.
-//                    }
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
 
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
@@ -150,15 +106,6 @@ public class Service extends android.app.Service {
         return null;
     }
 
-
-    /**
-     * it starts the process in foreground. Normally this is done when screen goes off
-     * THIS IS REQUIRED IN ANDROID 8 :
-     * "The system allows apps to call Context.startForegroundService()
-     * even while the app is in the background.
-     * However, the app must call that service's startForeground() method within five seconds
-     * after the service is created."
-     */
     public void restartForeground() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //check permission
@@ -192,12 +139,6 @@ public class Service extends android.app.Service {
     }
 
 
-    /**
-     * this is called when the process is killed by Android
-     *
-     * @param rootIntent
-     */
-
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
@@ -205,16 +146,9 @@ public class Service extends android.app.Service {
         // restart the never ending service
         Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
         sendBroadcast(broadcastIntent);
-        // do not call stoptimertask because on some phones it is called asynchronously
-        // after you swipe out the app and therefore sometimes
-        // it will stop the timer after it was restarted
-        // stoptimertask();
+
     }
 
-
-    /**
-     * static to avoid multiple timers to be created when the service is called several times
-     */
     private static Timer timer;
     private static TimerTask timerTask;
     long oldTime = 0;
@@ -227,15 +161,8 @@ public class Service extends android.app.Service {
         scheduler.scheduleAtFixedRate
                 (new Runnable() {
                     public void run() {
-                        client = LocationServices.getFusedLocationProviderClient(Service.getmCurrentService());
-                        if (ActivityCompat.checkSelfPermission(Service.getmCurrentService(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Service.getmCurrentService(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            // TODO: Consider calling
-                            //    ActivityCompat#requestPermissions
-                            // here to request the missing permissions, and then overriding
-                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                            //                                          int[] grantResults)
-                            // to handle the case where the user grants the permission. See the documentation
-                            // for ActivityCompat#requestPermissions for more details.
+                        client = LocationServices.getFusedLocationProviderClient(ServiceAppKid.getmCurrentServiceAppKid());
+                        if (ActivityCompat.checkSelfPermission(ServiceAppKid.getmCurrentServiceAppKid(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ServiceAppKid.getmCurrentServiceAppKid(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             return;
                         }
                         client.getLastLocation().addOnSuccessListener(new OnSuccessListener() {
@@ -246,7 +173,7 @@ public class Service extends android.app.Service {
 //                                    Log.i("Starting Location!", );
                                     Location location = (Location) o;
                                     Date currentTime = Calendar.getInstance().getTime();
-//                                    ref.child(String.valueOf(currentTime)).setValue(new MapDTO(location.getLatitude(), location.getLongitude()));
+                                    ref.child(String.valueOf(currentTime)).setValue(new MapDTO(location.getLatitude(), location.getLongitude()));
                                     Log.i("Starting Location getLatitude!", String.valueOf(location.getLatitude()));
                                     Log.i("Starting Location getLongitude!", String.valueOf(location.getLongitude()));
                                 }
@@ -256,94 +183,6 @@ public class Service extends android.app.Service {
                 }, 0, 60, TimeUnit.SECONDS);
 
 
-
-        //receive notification
-        check = database.getReference().child("Kids").child("146194");
-        check.addValueEventListener(new ValueEventListener() {
-            MediaPlayer mediaPlayer ;//= MediaPlayer.create(getApplicationContext(), R.raw.sos);
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Get Post object and use the values to update the UI
-                Kid kid = snapshot.getValue(Kid.class);
-                // ...
-                if (kid!= null){
-                    Boolean  check = Boolean.valueOf(kid.getSos());
-                    Log.d("check", String.valueOf(check));
-                    if (check.equals(true)){
-                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-                        mediaPlayer.start();
-                    } else {
-                        if (mediaPlayer.isPlaying()){
-                            mediaPlayer.pause();
-//                            mediaPlayer.release();
-                        } else {
-                            return;
-                        }
-//                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-                        //mediaPlayer.pause();
-
-//                        mediaPlayer.release();
-//                        mediaPlayer.
-                    }
-
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-//        check.addChildEventListener(new ChildEventListener() {
-//            MediaPlayer mediaPlayer;
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//                boolean check = (boolean) snapshot.getValue();
-//                Log.d("check", String.valueOf(check));
-//                if (check){
-//                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-//                    mediaPlayer.start();
-//                } else {
-//                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-//                mediaPlayer.stop();
-//                mediaPlayer.release();
-//            }
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-////
-//                boolean check = (boolean) snapshot.getValue();
-//                Log.i("check", String.valueOf(check));
-////
-//                if (check){
-//                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-//                    mediaPlayer.start();
-//                } else {
-////                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-//                    mediaPlayer.stop();
-//                    mediaPlayer.release();
-//                }
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
 
         Log.i(TAG, "Starting timer");
 
@@ -359,9 +198,6 @@ public class Service extends android.app.Service {
         timer.schedule(timerTask, 0, 1000); //
     }
 
-    /**
-     * it sets the timer to print the counter every x seconds
-     */
     public void initializeTimerTask() {
         Log.i(TAG, "initialising TimerTask");
         timerTask = new TimerTask() {
@@ -370,10 +206,6 @@ public class Service extends android.app.Service {
             }
         };
     }
-
-    /**
-     * not needed
-     */
     public void stoptimertask() {
         //stop the timer, if it's not already null
         if (timer != null) {
@@ -382,12 +214,12 @@ public class Service extends android.app.Service {
         }
     }
 
-    public static Service getmCurrentService() {
-        return mCurrentService;
+    public static ServiceAppKid getmCurrentServiceAppKid() {
+        return mCurrentServiceAppKid;
     }
 
-    public static void setmCurrentService(Service mCurrentService) {
-        Service.mCurrentService = mCurrentService;
+    public static void setmCurrentServiceAppKid(ServiceAppKid mCurrentServiceAppKid) {
+        ServiceAppKid.mCurrentServiceAppKid = mCurrentServiceAppKid;
     }
 
 }

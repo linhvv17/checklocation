@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frame_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,11 +8,8 @@
 
 
 <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#03A9F4"
     tools:context=".fragment.LoginFragment">
 
@@ -68,6 +66,22 @@
         app:layout_constraintTop_toBottomOf="@+id/edt_pass">
 
     </Button>
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="50dp"
+        android:background="#0222F3"
+        android:text="Van tay"
+        android:textColor="#fafafa"
+        android:textSize="26sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login_user">
+
+    </Button>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -60,7 +60,6 @@ public class ParentMessageFragment extends Fragment {
     }
 
     private void createHeroList() {
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         userReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
@@ -68,10 +67,12 @@ public class ParentMessageFragment extends Fragment {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+//                mKidMessages.clear();
                 // Get Post object and use the values to update the UI
                 Parent parent = dataSnapshot.getValue(Parent.class);
                 // ...
                 if (parent!=null){
+                    mKidMessages.clear();
                     code = parent.getCode();
                     kidReference = FirebaseDatabase.getInstance().getReference().child("Kids").child(code);
                     kidReference.addValueEventListener(new ValueEventListener() {
@@ -94,7 +95,6 @@ public class ParentMessageFragment extends Fragment {
             }
         };
         userReference.addValueEventListener(postListener);
-
     }
 
 }

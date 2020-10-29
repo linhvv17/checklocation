@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.locationchecker.R;
 import com.example.locationchecker.adapter.MessagesAdapter;
+import com.example.locationchecker.adapter.MessagesKidAdapter;
 import com.example.locationchecker.model.Kid;
 import com.example.locationchecker.model.Messages;
 import com.example.locationchecker.model.Parent;
@@ -51,8 +52,8 @@ public class Chats2Activity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     private final List<Messages> arrMessage = new ArrayList<>();
-    private MessagesAdapter messagesAdapter;
-    private RecyclerView rvChatsLayout;
+    private MessagesKidAdapter messagesAdapter;
+    private RecyclerView rvChatsLayout2;
     private LinearLayoutManager linearLayoutManager;
     private Toolbar toolbar;
     private String saveCurrentTime, saveCurrentDate;
@@ -72,7 +73,7 @@ public class Chats2Activity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         //sua cho nay
 
-//        messageSenderID = auth.getCurrentUser().getUid();
+        messageSenderID = "146194";
         reference = FirebaseDatabase.getInstance().getReference();
 
         chatName = findViewById(R.id.tv_name_chat_kid);
@@ -80,7 +81,7 @@ public class Chats2Activity extends AppCompatActivity {
         ciChats = findViewById(R.id.chat_img);
         edtMessage = findViewById(R.id.edt_message_kid);
         imgMessage = findViewById(R.id.img_send_kid);
-        rvChatsLayout = findViewById(R.id.rv_chat_layout_kid);
+        rvChatsLayout2 = findViewById(R.id.rv_chat_layout_kid);
 //        imgCallVdieo = findViewById(R.id.btn_video_call);
 //        imgFile = findViewById(R.id.img_file);
 //        imgMedia = findViewById(R.id.btn_media);
@@ -165,7 +166,7 @@ public class Chats2Activity extends AppCompatActivity {
 
             DatabaseReference ref  = FirebaseDatabase.getInstance().getReference();
             String messageKey = reference.push().getKey();
-            DatabaseReference refMes = ref.child("Message").child(messageReceiverID).child(messageKey);
+            DatabaseReference refMes = ref.child("Message").child(messageKey);
             HashMap<String, Object> mes = new HashMap<>();
             mes.put("sender", messageSenderID);
             mes.put("receiver", messageReceiverID);
@@ -177,7 +178,7 @@ public class Chats2Activity extends AppCompatActivity {
     }
 
     private void retrieveMessage(final String senderId, final String receiverId) {
-        reference = FirebaseDatabase.getInstance().getReference().child("Message").child(messageReceiverID);
+        reference = FirebaseDatabase.getInstance().getReference().child("Message");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -192,12 +193,13 @@ public class Chats2Activity extends AppCompatActivity {
                         arrMessage.add(messages);
                         Log.d("MSG",messages.getMessage());
                     }
-                    messagesAdapter = new MessagesAdapter(
+                    messagesAdapter = new MessagesKidAdapter(
                             arrMessage,
                             getApplicationContext()
                     );
-                    rvChatsLayout.setAdapter(messagesAdapter);
-                    rvChatsLayout.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    messagesAdapter.setCode(messageSenderID);
+                    rvChatsLayout2.setAdapter(messagesAdapter);
+                    rvChatsLayout2.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 }
             }
             @Override

@@ -13,21 +13,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.locationchecker.R;
 import com.example.locationchecker.SOSActivity;
-import com.example.locationchecker.Service;
+import com.example.locationchecker.ServiceAppKid;
 import com.example.locationchecker.fragment.KidCallFragment;
 import com.example.locationchecker.fragment.KidHomeFragment;
 import com.example.locationchecker.fragment.KidMessageFragment;
 import com.example.locationchecker.fragment.KidSettingFragment;
-import com.example.locationchecker.fragment.ParentCallFragment;
-import com.example.locationchecker.fragment.ParentHomeFragment;
-import com.example.locationchecker.fragment.ParentMessageFragment;
-import com.example.locationchecker.fragment.ParentSettingFragment;
 import com.example.locationchecker.model.Kid;
-import com.example.locationchecker.model.Parent;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,14 +57,15 @@ public class HomeKidsActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_kids);
+        tvName = findViewById(R.id.tvNameKid);
         initView();
         Intent intent = getIntent();
         String message = intent.getStringExtra("message");
         Log.d("MESSAGE",message);
 
 
-        android_id = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+//        android_id = Settings.Secure.getString(this.getContentResolver(),
+//                Settings.Secure.ANDROID_ID);
 
         DatabaseReference kidReference = FirebaseDatabase.getInstance().getReference().child("Kids").child(message);
 
@@ -82,9 +77,9 @@ public class HomeKidsActivity extends AppCompatActivity implements View.OnClickL
                 Kid kid = dataSnapshot.getValue(Kid.class);
                 // ...
                 if (kid!=null){
-//                    tvName.setText(parent.getName());
+                    tvName.setText(kid.getName());
                     String codeKid = kid.getCode();
-                    Intent mIntent = new Intent(getApplicationContext(), Service.class);
+                    Intent mIntent = new Intent(getApplicationContext(), ServiceAppKid.class);
                     Bundle mBundle = new Bundle();
                     mBundle.putString("kidto", codeKid);
                     mIntent.putExtras(mBundle);

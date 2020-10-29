@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -81,6 +82,7 @@ public class KidSettingFragment extends Fragment {
                 kid.put("name",edtName.getText().toString()) ;
                 kid.put("phone",edtPhone.getText().toString());
                 userReference.updateChildren(kid);
+                Toast.makeText(getContext(),"Thay doi thanh cpng!", Toast.LENGTH_LONG).show();
             }
         });
 

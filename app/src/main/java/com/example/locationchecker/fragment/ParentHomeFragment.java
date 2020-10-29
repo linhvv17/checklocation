@@ -1,12 +1,7 @@
 package com.example.locationchecker.fragment;
 
-import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,7 +16,6 @@ import android.view.ViewGroup;
 
 import com.example.locationchecker.ExampleDialog;
 import com.example.locationchecker.R;
-import com.example.locationchecker.Service;
 import com.example.locationchecker.model.Kid;
 import com.example.locationchecker.model.Parent;
 import com.example.locationchecker.model.model.MapDTO;
@@ -52,14 +46,10 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
-//    DatabaseReference check = database.getReference().child("Kids").child("565345");
-
     //
     private ArrayList<MapDTO> mapDTOS;
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference();
-//    DatabaseReference refMap = database.getReference().child("Maps");
-
     private FirebaseUser firebaseUser;
     private DatabaseReference kidReference;
     private DatabaseReference mapsReference;
@@ -95,20 +85,10 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_parent_home, container, false);
 
-
-
-
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-
-//        mapDTOS = new ArrayList<>();
-
-//        mUser = FirebaseAuth.getInstance().getCurrentUser();
-//        userReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
-
-//        userReference.child("code");
 
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -134,9 +114,9 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
 //                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
 //                                    openDialog();
 
-//                                    ExampleDialog exampleDialog = new ExampleDialog();
-//                                    exampleDialog.setCode(text);
-//                                    exampleDialog.show(getFragmentManager(), "example dialog");
+                                    ExampleDialog exampleDialog = new ExampleDialog();
+                                    exampleDialog.setCode(text);
+                                    exampleDialog.show(getFragmentManager(), "example dialog");
 
                                 } else {
 
@@ -160,36 +140,6 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
 
             }
         });
-
-//        checkReference =  ref.child("Kids").child(text);
-//
-//        checkReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                // Get Post object and use the values to update the UI
-//                Kid kid = snapshot.getValue(Kid.class);
-//                // ...
-//                if (kid != null) {
-//                    Boolean check = Boolean.valueOf(kid.getSos());
-//                    Log.d("check", String.valueOf(check));
-//
-//                    if (check.equals(true)) {
-////                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.sos);
-//                        openDialog();
-//                    } else {
-//
-//                        return;
-//                    }
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
         return view;
     }
 
@@ -226,7 +176,7 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
     public void onMapReady(GoogleMap googleMap) {
         mapDTOS = new ArrayList<>();
 
-        mapsReference = FirebaseDatabase.getInstance().getReference("KidMaps").child(text);
+        mapsReference = FirebaseDatabase.getInstance().getReference("KidMaps").child("146194");
         MapsInitializer.initialize(getContext());
         this.mMap = googleMap;
         //bat la ban
@@ -242,39 +192,8 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
         googleMap.setTrafficEnabled(true);
         googleMap.setBuildingsEnabled(true);
 
-        // Lay du lieu tu firebase
-//        kidReference = FirebaseDatabase.getInstance().getReference().child("Kids").child("332943");
-//        getLocation();
-
-
         //kieu hien thi
         googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-
-        // Lay du lieu tu firebase
-//        kidReference = FirebaseDatabase.getInstance().getReference().child("Kids").child("565345");
-//        kidReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//                Kid kid = snapshot.getValue(Kid.class);
-//                // ...
-//                if (kid!= null){
-//                    String lat = kid.getLat();
-//                    String lng = kid.getLng();
-//                    sydney = new LatLng(Double.valueOf(lat), Double.valueOf(lng));
-//                    mMap.addMarker(new MarkerOptions().position(sydney).title("My Son in here! \n "+lat+","+lng));
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
         // lay du lieu map
         mapsReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -295,9 +214,6 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
                     mMap.addMarker(new MarkerOptions()
                             .position(end)
                             .title("Điểm kết thúc!"));
-//                    .setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
-//                );
                     for (int i = 0; i < mapDTOS.size() - 1; i++) {
                         MapDTO src = mapDTOS.get(i);
                         MapDTO dest = mapDTOS.get(i + 1);
@@ -310,43 +226,16 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
                                 ).width(10).color(Color.BLUE).geodesic(true)
                         );
                     }
-//
                     mMap.addMarker(new MarkerOptions().position(start).title("Điểm bắt đầu!"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(end,18));
                 }
-//                LatLng start = new LatLng(mapDTOS.get(0).getLatitude(), mapDTOS.get(0).getLongitude());
-//                LatLng end = new LatLng(mapDTOS.get(mapDTOS.size()-1).getLatitude(), mapDTOS.get(mapDTOS.size()-1).getLongitude());
-                //tao 1 marker
-//                mMap.addMarker(new MarkerOptions()
-//                        .position(end)
-//                        .title("Điểm kết thúc!"));
-////                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
-////                );
-//                for (int i = 0; i < mapDTOS.size() - 1; i++) {
-//                    MapDTO src = mapDTOS.get(i);
-//                    MapDTO dest = mapDTOS.get(i + 1);
-//
-//                    // mMap is the Map Object
-//                    Polyline line = mMap.addPolyline(
-//                            new PolylineOptions().add(
-//                                    new LatLng(src.getLatitude(), src.getLongitude()),
-//                                    new LatLng(dest.getLatitude(),dest.getLongitude())
-//                            ).width(10).color(Color.BLUE).geodesic(true)
-//                    );
-//                }
-////
-//                mMap.addMarker(new MarkerOptions().position(start).title("Điểm bắt đầu!"));
-//                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(end,18));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-//        getLocation();
-//        LatLng myLL = new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude());
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in My Location"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
 
         if (ActivityCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -356,46 +245,12 @@ public class ParentHomeFragment extends Fragment implements OnMapReadyCallback, 
                 == PackageManager.PERMISSION_GRANTED) {
             googleMap.setMyLocationEnabled(true);
         } else {
-            //            Common.checkAndRequestPermissionsGPS(getActivity());
         }
 
-//        showMarkerToGoogleMap();
 
     }
 
-//    private LatLng getLocation() {
-//
-//        ValueEventListener postListener = new ValueEventListener() {
-//
-//
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // Get Post object and use the values to update the UI
-//                Kid kid = dataSnapshot.getValue(Kid.class);
-//                // ...
-//                if (kid!= null){
-//                    sydney = new LatLng(kid.getLat(), kid.getLng());
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // Getting Post failed, log a message
-//                //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-//                // ...
-//            }
-//        };
-//        kidReference.addValueEventListener(postListener);
-//        return sydney;
-//    }
 
-    public void showMarkerToGoogleMap(LatLng position) {
-        mMap.clear();
-        MarkerOptions markerOptions = new MarkerOptions().position(position);
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_active));
-        mMap.addMarker(markerOptions);
-    }
 
     @Override
     public void onClick(View v) {

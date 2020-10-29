@@ -78,8 +78,9 @@ public class KidMessageFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                mParents.clear();
+//                mParents.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()){
+                    mParents.clear();
                     Parent parent = ds.getValue(Parent.class);
                     mParents.add(parent);
 //                    if (parent!=null){

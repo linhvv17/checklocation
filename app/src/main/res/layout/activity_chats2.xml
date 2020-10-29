@@ -45,7 +45,7 @@
                     android:id="@+id/tv_last_seen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_name_chat"
+                    android:layout_below="@id/tv_name_chat_kid"
                     android:layout_marginStart="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
